@@ -14,9 +14,9 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: <%= ENV['MYAPP_DB_USERNAME'] || 'root' %>
-  password: <%= ENV['MYAPP_DB_PASSWORD'] || '' %
-  host: localhost
- 
+  password: <%= ENV['MYAPP_DB_PASSWORD'] || '' %>
+  host: db
+
 development:
   <<: *default
   database: rails_docker_boilerplate_development
