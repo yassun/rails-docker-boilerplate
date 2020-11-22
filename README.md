@@ -1,24 +1,22 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# rails-docker-boilerplate
 
-Things you may want to cover:
+This is a Ruby on Rails / Docker boilerplate app.
 
-* Ruby version
+## Features
+- Docker Compose
+  - web: Ruby 2.7.1 / Ruby on Rails 6.0.3
+  - worker: Sidekiq
+  - db: MySQL
+  - redis: Redis
 
-* System dependencies
+## Usages
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+$ git clone git@github.com:yassun/rails-docker-boilerplate.git
+$ cd rails-docker-boilerplate
+$ docker-compose up
+$ docker exec -it rails-docker-boilerplate_web_1 bash
+$ rails db:create
+```
