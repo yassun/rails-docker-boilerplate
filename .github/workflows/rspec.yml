@@ -1,0 +1,59 @@
+name: RSpec
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    services:
+      db:
+        image: mysql:5.7
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+        ports:
+        - 3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
+      redis:
+        image: redis:5.0-alpine
+        options: --health-cmd "redis-cli -h localhost ping" --health-interval 10s --health-timeout 5s --health-retries 15
+        ports:
+        - 6379
+    container:
+      image: ruby:2.7.1
+      env:
+        RAILS_ENV: test
+        MYAPP_DB_USERNAME: root
+        MYAPP_DB_PASSWORD: password
+        REDIS_URL: redis://redis:6379/1
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache gems
+      uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gem-
+    - name: Cache node modules
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Setup YARN and NodeJS
+      run: |
+        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+        curl -sL https://deb.nodesource.com/setup_13.x | bash -
+        apt-get install -y yarn nodejs
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --path vendor/bundle --without production
+        yarn install
+    - name: setup DB
+      run: |
+        bundle exec rails db:create
+        #bundle exec rails db:schema:load
+    - name: Run tests
+      run: bundle exec rspec
