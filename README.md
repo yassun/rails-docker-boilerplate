@@ -2,7 +2,7 @@
 
 # rails-docker-boilerplate
 
-This is a `Ruby on Rails / Docker / Github Action` boilerplate app.
+This is a `Ruby on Rails / Docker / Github Actions` boilerplate app.
 
 ## Features
 - Docker Compose
