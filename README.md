@@ -16,7 +16,8 @@ This is a `Ruby on Rails / Docker / Github Actions` boilerplate app.
 ```
 $ git clone git@github.com:yassun/rails-docker-boilerplate.git
 $ cd rails-docker-boilerplate
-$ docker-compose up
+$ docker-compose build
 $ docker exec -it rails-docker-boilerplate_web_1 bash
 $ rails db:create
+$ docker-compose up
 ```
